@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:module_model/module_model.dart';
 import 'package:provider/provider.dart';
+import 'package:state_management/src/filters.dart';
 import 'package:state_management/src/widgets/items_view.dart';
 
 import 'bottom_bar.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<List<dynamic>> items = [];
   late TextEditingController _editingController;
+  Filters _filter = Filters.all;
 
   @override
   void initState() {
@@ -36,6 +38,24 @@ class _HomePageState extends State<HomePage> {
             }),
             icon: const Icon(Icons.sort),
           ),
+          IconButton(
+            onPressed: (() {
+              switch (_filter) {
+                case Filters.all:
+                  _filter = Filters.toBuy;
+                  break;
+                case Filters.toBuy:
+                  _filter = Filters.isBought;
+                  break;
+                case Filters.isBought:
+                  _filter = Filters.all;
+                  break;
+              }
+              setState(() {});
+              // Provider.of<Items>(context, listen: false).sortItems();
+            }),
+            icon: makeIcon(_filter),
+          ),
         ],
       ),
       body: SafeArea(
@@ -43,7 +63,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            const ItemsView(),
+            ItemsView(filter: _filter),
             BottomBar(editingController: _editingController),
           ],
         ),
@@ -55,5 +75,16 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     _editingController.dispose();
     super.dispose();
+  }
+
+  Widget makeIcon(Filters filter) {
+    switch (filter) {
+      case Filters.all:
+        return const Icon(Icons.library_add_check_outlined);
+      case Filters.toBuy:
+        return const Icon(Icons.check_box_outline_blank_outlined);
+      case Filters.isBought:
+        return const Icon(Icons.check_box_outlined);
+    }
   }
 }

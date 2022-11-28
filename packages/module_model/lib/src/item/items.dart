@@ -12,18 +12,24 @@ class Items with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeItem(int index) {
-    _shoppingList.removeAt(index);
+  void removeItem(String name) {
+    var element = _shoppingList
+        .firstWhere((element) => element[0] == name && element[1] == true);
+    _shoppingList.remove(element);
     notifyListeners();
   }
 
-  void changeItemCondition(int index, bool value) {
-    _shoppingList[index][1] = value;
-    notifyListeners();
-  }
+  // void changeItemCondition(int index, bool value) {
+  //   _shoppingList[index][1] = value;
+  //   notifyListeners();
+  // }
 
   void sortItems() {
-    _shoppingList.sort(((a, b) => a[0].compareTo(b[0])));
+    _shoppingList.sort((a, b) => a[0].compareTo(b[0]));
+    notifyListeners();
+  }
+
+  void notify() {
     notifyListeners();
   }
 
