@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:module_business/module_business.dart';
 
@@ -12,8 +11,8 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter',
       debugShowCheckedModeBanner: false,
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.userChanges(),
+      home: StreamBuilder(
+        stream: BlocFactory.instance.mainBloc.firebaseService.userChanges(),
         builder: (context, snapshot) {
           return snapshot.hasData
               ? const HomePage(title: 'Список покупок')

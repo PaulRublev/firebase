@@ -1,5 +1,5 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:module_business/module_business.dart';
 
 import '../filters.dart';
 import 'items_view.dart';
@@ -15,14 +15,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _storage = FirebaseStorage.instance;
   late Future<String> _url;
   late TextEditingController _editingController;
   Filters _filter = Filters.all;
 
   @override
   void initState() {
-    _url = _storage.ref('store.png').getDownloadURL();
+    _url = BlocFactory.instance.mainBloc.firebaseService.getImageUrl();
     _editingController = TextEditingController(text: '');
     super.initState();
   }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:module_data/module_data.dart';
 import 'package:module_model/module_model.dart';
@@ -11,6 +12,7 @@ import '../../firebase_options.dart';
 class MyFirebaseService implements FirebaseService {
   late final CollectionReference<Item> _items;
 
+  @override
   void referenceInit() {
     _items = FirebaseFirestore.instance.collection('items').withConverter<Item>(
           fromFirestore: (snapshot, options) => Item.fromJson(snapshot.data()!),
@@ -66,5 +68,16 @@ class MyFirebaseService implements FirebaseService {
       );
       return await FirebaseAuth.instance.signInWithCredential(credential);
     }
+    return null;
+  }
+
+  @override
+  Future<String> getImageUrl() {
+    return FirebaseStorage.instance.ref('store.png').getDownloadURL();
+  }
+
+  @override
+  Stream<User?> userChanges() {
+    return FirebaseAuth.instance.userChanges();
   }
 }

@@ -5,6 +5,10 @@ abstract class FirebaseService {
 
   Future firebaseInit();
 
+  Future<String> getImageUrl();
+
+  Stream userChanges();
+
   Stream<List<Item>> streamItems();
 
   void addItem(Item item);
