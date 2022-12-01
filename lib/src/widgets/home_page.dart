@@ -1,9 +1,8 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:module_model/module_model.dart';
-import 'package:provider/provider.dart';
-import 'package:state_management/src/filters.dart';
-import 'package:state_management/src/widgets/items_view.dart';
 
+import '../filters.dart';
+import 'items_view.dart';
 import 'bottom_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,13 +15,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<List<dynamic>> items = [];
+  final _storage = FirebaseStorage.instance;
+  late Future<String> _url;
   late TextEditingController _editingController;
   Filters _filter = Filters.all;
 
   @override
   void initState() {
-    _editingController = TextEditingController(text: 'Простынь');
+    _url = _storage.ref('store.png').getDownloadURL();
+    _editingController = TextEditingController(text: '');
     super.initState();
   }
 
@@ -32,12 +33,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          IconButton(
-            onPressed: (() {
-              Provider.of<Items>(context, listen: false).sortItems();
-            }),
-            icon: const Icon(Icons.sort),
-          ),
           IconButton(
             onPressed: (() {
               switch (_filter) {
@@ -52,7 +47,6 @@ class _HomePageState extends State<HomePage> {
                   break;
               }
               setState(() {});
-              // Provider.of<Items>(context, listen: false).sortItems();
             }),
             icon: makeIcon(_filter),
           ),
@@ -63,7 +57,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            ItemsView(filter: _filter),
+            ItemsView(filter: _filter, url: _url),
             BottomBar(editingController: _editingController),
           ],
         ),

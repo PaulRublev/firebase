@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:module_business/module_business.dart';
 import 'package:module_model/module_model.dart';
-import 'package:provider/provider.dart';
 
 class BottomBar extends StatelessWidget {
   const BottomBar({super.key, required this.editingController});
@@ -40,12 +40,12 @@ class BottomBar extends StatelessWidget {
             width: 150,
             child: ElevatedButton(
               onPressed: (() {
-                Provider.of<Items>(context, listen: false).addItem(
-                  [
-                    editingController.value.text,
-                    false,
-                  ],
-                );
+                if (editingController.value.text != '') {
+                  BlocFactory.instance.mainBloc.firebaseService.addItem(Item(
+                    name: editingController.value.text,
+                    isBought: false,
+                  ));
+                }
               }),
               child: const Icon(Icons.add),
             ),
